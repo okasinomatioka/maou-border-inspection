@@ -1,0 +1,13 @@
+{
+  "name": "maou-border-inspection",
+  "version": "1.2.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test tests/engine.test.mjs tests/dialogue.test.mjs tests/questions.test.mjs",
+    "build": "node scripts/prepare-pages.mjs",
+    "publish:pages": "node scripts/publish-pages.mjs",
+    "dev": "python3 -m http.server 4173 --directory dist --bind 127.0.0.1"
+  },
+  "engines": { "node": ">=20" }
+}
