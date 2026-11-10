@@ -8,7 +8,7 @@ if(run('git',['branch','--show-current'],true)!=='main')throw Error('Publish fro
 if(run('git',['diff','--cached','--name-only'],true))throw Error('Existing staged changes found. Commit or unstage them before publishing.');
 run('git',['fetch','origin','main']);
 run('git',['merge-base','--is-ancestor','origin/main','HEAD']);
-run(process.execPath,['--test','tests/engine.test.mjs','tests/dialogue.test.mjs','tests/questions.test.mjs']);
+run(process.execPath,['--test','tests/engine.test.mjs','tests/dialogue.test.mjs','tests/questions.test.mjs','tests/endings.test.mjs']);
 run(process.execPath,['scripts/prepare-pages.mjs']);
 run('git',['add','--','dist','docs','tests','scripts','package.json','README.md','AGENTS.md','.gitignore']);
 if(run('git',['diff','--cached','--name-only'],true))run('git',['commit','-m',process.argv[2]||'Update game and GitHub Pages']);

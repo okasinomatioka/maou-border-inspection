@@ -33,6 +33,7 @@ http://localhost:4173 を開く。ES modulesを使うため、HTMLの直接ダ�
 
 ## 内容
 
+- v1.3：任務終了後のエンディングを追加。成功4種・敗北2種、各3場面の物語と最終戦績。読み返し・スキップ・途中保存に対応し、更新前にクリア済みのセーブでも閲覧可能。
 - 全8日、1日3〜5名（計31名）、各人物に動くSVG立ち絵。
 - 毎日1種の検査道具を追加。書類・印章・言語・荷物・変装・魔力・方言・王印を検査。
 - 入国許可、拒否、2枠の隔離、入国者の再検査、追放、殺害。
@@ -55,6 +56,7 @@ http://localhost:4173 を開く。ES modulesを使うため、HTMLの直接ダ�
 node --test tests/engine.test.mjs
 node --test tests/dialogue.test.mjs
 node --test tests/questions.test.mjs
+node --test tests/endings.test.mjs
 ```
 
 `dist/engine.mjs` にルールとステージ生成、`app.js` にUI、`art.js` にアニメーション立ち絵と城のSVGを収録。画像はすべて同梱のベクター描画。日本語Webフォントを取得できない場合は端末の明朝・ゴシックにフォールバック。
