@@ -1,6 +1,6 @@
 # Game development and publication
 
-This repository is the canonical source for 「魔王軍にも入国審査があるってこと！？」.
+This repository is the canonical source for 「魔王城にも入国審査があるってこと！？」.
 The user requested continued development in the current conversation and publication through GitHub Pages.
 
 - Edit `dist/` for the game, plus relevant tests. `docs/` is generated; do not edit it directly.
