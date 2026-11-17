@@ -36,12 +36,12 @@ export function endingStats(s){const history=s.history||[];const count=(action,h
  return {day:s.day,visitors:Math.max(0,(s.serial||0)-(s.queue?.length||0)),troops:effectiveTroops(s),food:s.food,losses:s.dead||0,
   alliesAdmitted:count('入国許可',false),heroesAdmitted:count('入国許可',true),heroesDenied:count('入国拒否',true),
   alliesTurnedAway:count('入国拒否',false)+count('追放',false),alliesKilled:count('殺害',false),
-  expelled:count('追放'),killed:count('殺害'),remainingHeroes:heroes(s),held:s.held.length};}
+  expelled:count('追放'),killed:count('殺害'),remainingHeroes:heroes(s),infiltrations:s.infiltrations||0,held:s.held.length};}
 export function getEnding(s){if(!['won','lost'].includes(s.phase))return null;const stats=endingStats(s);let id;
  if(s.phase==='lost')id=s.troops<=0?'empty':'fallen';
  else if(stats.alliesKilled>0||stats.alliesTurnedAway>=3)id='iron';
  else if(stats.troops<40||stats.losses>=40||stats.remainingHeroes>0)id='scarred';
- else if(stats.heroesAdmitted===0&&stats.alliesTurnedAway===0&&stats.alliesKilled===0&&stats.held===0&&stats.troops>=70)id='dawn';
+ else if(stats.heroesAdmitted===0&&stats.infiltrations===0&&stats.alliesTurnedAway===0&&stats.alliesKilled===0&&stats.held===0&&stats.troops>=70)id='dawn';
  else id='tomorrow';
  return {id,...ENDINGS[id],stats};}
 export function beginEnding(s){if(!getEnding(s))return false;s.ending={step:0};return true;}

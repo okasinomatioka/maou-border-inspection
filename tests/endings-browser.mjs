@@ -1,7 +1,7 @@
 import {chromium} from 'playwright';
 import assert from 'node:assert/strict';
 import {newGame,current,act,endNight,nextDay} from '../dist/engine.mjs';
-const s=newGame(123);for(let d=1;d<=8;d++){while(s.queue.length)act(s,current(s).hero?'deny':'admit');if(d<8){endNight(s);nextDay(s);}}
+const s=newGame(308);for(let d=1;d<=8;d++){while(s.queue.length)act(s,current(s).hero?'deny':'admit');if(d<8){endNight(s);nextDay(s);}}
 const browser=await chromium.launch({headless:true});
 const page=await browser.newPage({viewport:{width:1440,height:1050}}),errors=[];page.on('pageerror',e=>errors.push(e.message));
 try{
@@ -17,7 +17,7 @@ try{
  await page.screenshot({path:'/tmp/maou-ending-desktop.png',fullPage:true});
  await page.reload();await page.locator('[data-action="continue"]').click();assert.equal(await page.locator('.ending-prose h2').innerText(),'魔王様');
  await page.locator('[data-action="ending-back"]').click();assert.equal(await page.locator('.ending-prose h2').innerText(),'語り');
- await page.locator('[data-action="ending-skip"]').click();assert.equal(await page.locator('.ending-metrics>div').count(),9);assert.match(await page.locator('.ending-metrics').innerText(),/31 名/);
+ await page.locator('[data-action="ending-skip"]').click();assert.equal(await page.locator('.ending-metrics>div').count(),10);assert.match(await page.locator('.ending-metrics').innerText(),/31 名/);
  await page.setViewportSize({width:390,height:844});assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);await page.screenshot({path:'/tmp/maou-ending-mobile.png',fullPage:true});
  await page.locator('[data-action="ending"]').click();for(let i=0;i<3;i++)await page.locator('[data-action="ending-next"]').click();assert.equal(await page.locator('.ending-result').count(),1);
  await page.locator('[data-action="title"]').click();await page.locator('[data-action="continue"]').click();assert.equal(await page.locator('.ending-result').count(),1);

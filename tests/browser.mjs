@@ -4,6 +4,7 @@ const browser=await chromium.launch({headless:true});
 const page=await browser.newPage({viewport:{width:1440,height:1050},deviceScaleFactor:1});
 const errors=[];page.on('pageerror',e=>errors.push(e.message));
 try{
+await page.addInitScript(()=>{Date.now=()=>308;});
 const response=await page.goto('http://127.0.0.1:4173');
 assert.equal(response.status(),200);
 await page.screenshot({path:'/tmp/maou-title.png',fullPage:true});
