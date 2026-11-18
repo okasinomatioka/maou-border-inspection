@@ -1,3 +1,4 @@
+import {startDailyEvent,resolveDailyEvent} from './events.mjs';
 import {ensureDialogue,translate} from './dialogue.mjs';
 export const DAYS=8;
 export const DISPOSITIONS={deny:{cost:0,infiltration:35,revisit:50,delay:1},expel:{cost:8,infiltration:5,revisit:25,delay:2},kill:{cost:15,infiltration:0,revisit:0,delay:0}};
@@ -20,7 +21,7 @@ const SPECIES=['ゴブリン','角族','獣人','夜の民','スライム'];
 const JOBS=['薬売り','補給商人','衛兵志願者','回復術師','王室鍛冶師'];
 export function random(s){let t=s.seed+=0x6D2B79F5;t=Math.imul(t^t>>>15,t|1);t^=t+Math.imul(t^t>>>7,t|61);return ((t^t>>>14)>>>0)/4294967296;}
 export function newGame(seed=Date.now()>>>0){const s={version:1,seed,day:1,troops:100,food:8,queue:[],held:[],residents:[],returning:[],history:[],night:null,phase:'day',selected:null,processed:0,serial:0,dead:0,expelled:0,killed:0,border:[],infiltrations:0};makeDay(s);return s;}
-export function makeDay(s){s.processed=0;s.selected=null;s.night=null;s.queue=[];const count=COUNTS[s.day-1];for(let i=0;i<count;i++){const n=s.serial++;const hero=s.day===1?i===1:(i===1||i===count-1&&s.day>3);const challenge=hero?(i===1?s.day:Math.max(1,s.day-2)):0;const c={id:n,name:NAMES[n%NAMES.length],species:SPECIES[n%5],job:JOBS[n%5],hero,challenge,look:n,magic:30+(n*13)%61,inspected:{},destination:'黒曜城',permit:`OB-${1200+n}`,quote:'',language:'共通語',baggage:'薬草・パン・作業道具',invitation:false,seal:true};
+export function makeDay(s){startDailyEvent(s);s.processed=0;s.selected=null;s.night=null;s.queue=[];const count=COUNTS[s.day-1];for(let i=0;i<count;i++){const n=s.serial++;const hero=s.day===1?i===1:(i===1||i===count-1&&s.day>3);const challenge=hero?(i===1?s.day:Math.max(1,s.day-2)):0;const c={id:n,name:NAMES[n%NAMES.length],species:SPECIES[n%5],job:JOBS[n%5],hero,challenge,look:n,magic:30+(n*13)%61,inspected:{},destination:'黒曜城',permit:`OB-${1200+n}`,quote:'',language:'共通語',baggage:'薬草・パン・作業道具',invitation:false,seal:true};
  if(challenge===1){c.destination=s.day===1?'白銀の王都':'黒曜城';if(s.day>1)c.permit='失効済み';}
  if(challenge===2)c.seal=false;
  if(challenge===4)c.baggage='布に包まれた聖剣（携帯許可なし）';
@@ -72,6 +73,6 @@ export function resolveBorder(s){
  s.border=[];return reports;
 }
 export function endNight(s){if(s.phase!=='day'||s.queue.length)return {error:'今日の来訪者を全員審査してください。'};
- const border=resolveBorder(s),h=heroes(s);const starvation=s.food<4;const loss=h*3+(starvation?18:0);s.food=Math.max(0,s.food-4);s.troops=Math.max(0,s.troops-loss);s.dead+=loss;const chance=risk(s);const roll=Math.floor(random(s)*100)+1;const fallen=s.troops===0||(chance>0&&roll<=chance);
- s.night={heroes:h,loss,starvation,chance,roll,fallen,day:s.day,border,events:s.history.filter(e=>e.day===s.day)};s.phase=fallen?'lost':s.day===DAYS?'won':'night';s.selected=null;return s.night;}
+ const border=resolveBorder(s),dailyEvent=resolveDailyEvent(s),h=heroes(s);const starvation=s.food<4;const loss=h*3+(starvation?18:0);s.food=Math.max(0,s.food-4);s.troops=Math.max(0,s.troops-loss);s.dead+=loss;const chance=risk(s);const roll=Math.floor(random(s)*100)+1;const fallen=s.troops===0||(chance>0&&roll<=chance);
+ s.night={heroes:h,loss,starvation,chance,roll,fallen,day:s.day,border,dailyEvent,events:s.history.filter(e=>e.day===s.day)};s.phase=fallen?'lost':s.day===DAYS?'won':'night';s.selected=null;return s.night;}
 export function nextDay(s){if(s.phase!=='night')return false;s.day++;s.phase='day';makeDay(s);return true;}
